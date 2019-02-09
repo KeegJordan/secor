@@ -39,6 +39,8 @@ public class LogFilePathTest extends TestCase {
     private static final String CRC_PATH =
             "/some_parent_dir/some_topic/some_partition/some_other_partition/" +
             ".10_0_00000000000000000100.crc";
+    private static final String LOG_FILE_DIR = 
+        "/some_parent_dir/some_topic/some_partition/some_other_partition";
 
     private LogFilePath mLogFilePath;
     private long timestamp;
@@ -84,5 +86,17 @@ public class LogFilePathTest extends TestCase {
 
     public void testGetLogFileCrcPath() throws Exception {
         assertEquals(CRC_PATH, mLogFilePath.getLogFileCrcPath());
+    }
+
+    public void testLogFilePathEquals() throws Exception {
+        ParsedMessage message1 = new ParsedMessage(TOPIC, KAFKA_PARTITION, 1000, null,
+                                                  "some_payload".getBytes(), PARTITIONS, timestamp);
+        LogFilePath logFilePath1 = new LogFilePath(PREFIX, GENERATION, LAST_COMMITTED_OFFSET,
+                                                  message1, "");
+        ParsedMessage message2 = new ParsedMessage(TOPIC, KAFKA_PARTITION, 1000, null,
+                                                  "some_payload".getBytes(), PARTITIONS, timestamp);
+        LogFilePath logFilePath2 = new LogFilePath(PREFIX, GENERATION, LAST_COMMITTED_OFFSET,
+                                                  message2, "");
+        assertTrue(logFilePath1.equals(logFilePath2));
     }
 }
